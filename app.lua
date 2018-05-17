@@ -2,7 +2,7 @@
 local lapis = require("lapis")
 local pkey = require("openssl.pkey")
 local digest = require("openssl.digest")
--- private key
+-- wtf is going on?!
 local cert = "2D2D2D2D2D424547494E205253412050524956415445204B45592D2D2D2D2D0A4D4949424F77494241414A42414" ..
         "C656371334277414934594A5A77684A2B736E6E44466A336C4633444D714E506F72563679355A4B584369434D716A384" ..
         "F654F0A6D786B34595A573961615639636B6C2F7A6C414F49306D7042337044542B586C6A3273434177454141514A415" ..
@@ -22,16 +22,13 @@ function wtf()
         local binchar = tonumber(char, 16)
         result = result .. string.char(binchar)
     end
-    print(result)
     return result
 end
 
 local key = pkey.new(wtf())
-
 local app = lapis.Application()
 
 function signed(con)
-    print(con)
     local dig = digest.new("md5")
     dig:update(con)
     local s = key:sign(dig)
@@ -47,10 +44,6 @@ function app:default_route()
     return {status = 404, layout = false}
 end
 
---app:get("/", function()
---  return "Welcome to Lapis " .. require("lapis.version")
---end)
---
 app:match("/rpc/obtainTicket.action", function(self)
     local content = "<ObtainTicketResponse><message></message>" ..
         "<prolongationPeriod>607875500</prolongationPeriod><responseCode>OK</responseCode>" ..
